@@ -1,0 +1,21 @@
+{
+    "name": "brolaugh/mini-statue",
+    "description": "An image uploading library",
+    "authors": [
+     {
+         "name": "Hannes Kindströmmer",
+         "email": "haki1003@gmail.com",
+         "homepage": "https://github.com/brolaugh/mini-statue",
+         "role": "Developer"
+     }
+   ],
+    "type": "library",
+    "require": {
+        "sybio/image-workshop": "^2.0"
+    },
+    "require-dev": {
+      "joseph-lenton/php-error": "dev-master"
+    },
+    "license": "GPL-3.0",
+    "minimum-stability": "stable"
+}
