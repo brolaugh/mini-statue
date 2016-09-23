@@ -2,14 +2,13 @@
 
 namespace MiniStatue;
 
-
-use mysqli;
+use PHPImageWorkshop\Core\ImageWorkshopLayer;
 use PHPImageWorkshop\ImageWorkshop;
 
 class MiniStatue
 {
   const THUMBNAIL_MAX = 150;
-  const ;
+  const;
 
   const BOOTSTRAP_MAX_XS = 768;
   const BOOTSTRAP_MAX_SM = 992;
@@ -17,23 +16,35 @@ class MiniStatue
 
   private $fileformat = '.jpg';
 
-  public function __construct(array $options = [])
+  public function __construct(array $options)
   {
     if($options['savepath'] == NULL) {
       throw new \Exception('No savepath specified');
     }
-    if($options['mysqli'] == NULL) {
 
+    if($options['mysqli'] != NULL) {
+      //TODO: connect to mysql
     }
-    if($options['mongodb'] == NULL) {
+    if($options['dbtable'] == NULL) {
+      $options['table'] = 'mini_statue';
+    }
+
+    if($options['mongodb'] != NULL) {
+      //TODO: connect to mongodb
+    }
+
+    if($options['mongocollection'] == NULL) {
+      $options['mongocollection'] = 'mini_statue';
+    }
+    if($options['']) {
 
     }
   }
 
-  public function createBootstrapSizes(Object $image, bool $keepTransparancy): void
+  public function createBootstrapSizes(Object $image, bool $keepTransparancy = false): void
   {
-    if($keepTransparancy /* and MIME TYPE is png */){
-        $this->fileformat = '.png';
+    if($keepTransparancy /* and MIME TYPE is png */) {
+      $this->fileformat = '.png';
     }
 
     $imageLayer = ImageWorkshop::initFromResourceVar($image);
@@ -46,33 +57,45 @@ class MiniStatue
       //TODO: Skip the code below
     }
     if($imageLayer->getWidth() > self::BOOTSTRAP_MAX_XS) {
-      $imageSetPiece = clone $imageLayer;
-      $imageSetPiece->resizeInPixel(self::BOOTSTRAP_MAX_XS, NULL, true);
-      $imageSet[] = $imageSetPiece;
+      $imageSet[] = $this->createImageSetPiece($imageLayer, self::BOOTSTRAP_MAX_XS);
     }
     if($imageLayer->getWidth() > self::BOOTSTRAP_MAX_SM) {
-      $imageSetPiece = clone $imageLayer;
-      $imageSetPiece->resizeInPixel(self::BOOTSTRAP_MAX_SM, NULL, true);
-      $imageSet[] = $imageSetPiece;
+      $imageSet[] = $this->createImageSetPiece($imageLayer, self::BOOTSTRAP_MAX_SM);
     }
     if($imageLayer->getWidth() > self::BOOTSTRAP_MAX_MD) {
-      $imageSetPiece = clone $imageLayer;
-      $imageSetPiece->resizeInPixel(self::BOOTSTRAP_MAX_MD, NULL, true);
-      $imageSet[] = $imageSetPiece;
+      $imageSet[] = $this->createImageSetPiece($imageLayer, self::BOOTSTRAP_MAX_MD);
     }
-
   }
 
-  public function
-  private function isSVG(ImageWorkshop $image): bool
-{
-  // Not sure if ImageWorkshop is the object wanted
-  //TODO: Detect if file is an SVG
-  return false;
-}
-   private function minifySVG($svg)
-   {
-     //TODO: Do minification magic
-     return $svg;
-   }
+  private function createImageSetPiece(ImageWorkshopLayer $image, int $width): ImageWorkshopLayer
+  {
+    $imageSetPiece = clone $image;
+    $imageSetPiece->resizeInPixel($width, NULL, true);
+    return $imageSetPiece;
+  }
+
+  private function isSVG(ImageWorkshopLayer $image): bool
+  {
+    // Not sure if ImageWorkshop is the object wanted
+    //TODO: Detect if file is an SVG
+    return false;
+  }
+
+  private function isGIF(ImageWorkshopLayer $image): bool
+  {
+    // Not sure if ImageWorkshop is the object wanted
+    //TODO: Detect if file is a GIF
+    return false;
+  }
+  private  function getExtension($str)
+  {
+    $i = strrpos($str,".");
+    if (!$i)
+    {
+      return "";
+    }
+    $l = strlen($str) - $i;
+    $ext = substr($str,$i+1,$l);
+    return $ext;
+  }
 }
